@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Text;
+using System.Globalization;
+using System.Threading;
 
 namespace Preiskalkulation
 {
@@ -13,10 +15,12 @@ namespace Preiskalkulation
             Console.WriteLine("Listenpreiskalkulation");
             Console.WriteLine();
 
-            double _Listeneinkaufspreis = EingabeDouble("Einkauf Listenpreis (€)");
+            var region = new RegionInfo(System.Threading.Thread.CurrentThread.CurrentCulture.LCID);
+
+            double _Listeneinkaufspreis = EingabeDouble($"Einkauf Listenpreis ({region.CurrencySymbol})");
             double _Lieferrabatt        = EingabeDouble("Lieferrabatt (%)") / 100;
             double _Liefererskonto      = EingabeDouble("Liefererskonto (%)") / 100;
-            double _Bezugskosten        = EingabeDouble("Bezugskosten (€)");
+            double _Bezugskosten        = EingabeDouble($"Bezugskosten ({region.CurrencySymbol})");
             double _Handlungskosten     = EingabeDouble("Handlungskosten (%)") / 100;
             double _Gewinn              = EingabeDouble("Gewinn (%)") / 100;
             double _Kundenskonto        = EingabeDouble("Kundenskonto (%)");

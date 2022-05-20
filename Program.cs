@@ -32,14 +32,14 @@ namespace Preiskalkulation
             double Selbstkosten                  = Math.Round(Bezugspreis + Bezugspreis * _Handlungskosten, 2);
             double Barverkaufspreis              = Math.Round(Selbstkosten + Selbstkosten * _Gewinn, 2);
             
-            double Zielverkaufspreis_Modifikator = Math.Round(100 - (_Kundenskonto + _Vertreterprovision), 2);
-            double Zielverkaufspreis_Basis       = Math.Round(Barverkaufspreis / Zielverkaufspreis_Modifikator, 2);
+            double Zielverkaufspreis_Modifikator = 100 - (_Kundenskonto + _Vertreterprovision);
+            double Zielverkaufspreis_Basis       = Barverkaufspreis / Zielverkaufspreis_Modifikator;
             double Zielverkaufspreis             = Math.Round(Barverkaufspreis
                                                    + Math.Round(Zielverkaufspreis_Basis * _Kundenskonto, 2) 
                                                    + Math.Round(Zielverkaufspreis_Basis * _Vertreterprovision, 2), 2);
 
-            double Listenverkaufspreis_Modifikator = Math.Round(100 - (_Kundenrabatt), 2);
-            double Listenverkaufspreis_Basis       = Math.Round(Zielverkaufspreis / Listenverkaufspreis_Modifikator, 2);
+            double Listenverkaufspreis_Modifikator = 100 - (_Kundenrabatt);
+            double Listenverkaufspreis_Basis       = Zielverkaufspreis / Listenverkaufspreis_Modifikator;
             double Listenverkaufspreis           = Math.Round(Zielverkaufspreis
                                                    + Math.Round(Listenverkaufspreis_Basis * _Kundenrabatt, 2), 2);
             

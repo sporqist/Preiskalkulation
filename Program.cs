@@ -24,28 +24,32 @@ namespace Preiskalkulation
             Console.WriteLine();
 
             bool Exit;                                          // Abbruchbedingung der nächsten while-Schleife
-            Queue<double[]> Ergebnisse = new Queue<double[]>(); 
+            Queue<double[]> Ergebnisse = new Queue<double[]>(); // FiFo Queue für das Zwischenspeichern der Ergebnisse.
             
+            // Header der Eingabetabelle
             Console.WriteLine("Eingabe:");
             Console.WriteLine($"Nr.\t| Listeneinkaufspreis ({region.CurrencySymbol})");
             Console.WriteLine("========+==========================================");
-            do {
-                (double, bool) _Eingabe = Eingabe($"{Ergebnisse.Count + 1}\t| ");
+
+            do { 
+                (double, bool) _Eingabe = Eingabe($"{Ergebnisse.Count + 1}\t| "); // Aufruf der Interaktiven Eingabe.
                 double Listeneinkaufspreis = _Eingabe.Item1;
                 Exit = _Eingabe.Item2;
 
-                double[] Ergebnis = Kalkulation(Listeneinkaufspreis);
-                Ergebnisse.Enqueue(Ergebnis);
+                double[] Ergebnis = Kalkulation(Listeneinkaufspreis); // Aufruf der Kalkulation.
+                Ergebnisse.Enqueue(Ergebnis); // Hänge das Ergebnis der Kalkulation ans Ende der FiFo Queue an.
             } while (!Exit);
 
+            // Header der Ausgabetabelle
             Console.WriteLine();
             Console.WriteLine("Ergebnisse:");
             Console.WriteLine($"Nr.\t| Listenverkaufspreis ({region.CurrencySymbol})");
             Console.WriteLine("========+==========================================");
 
             for (int i = 1; i <= Ergebnisse.Count; i++) {
-                double[] Ausgabe = Ergebnisse.Dequeue();
+                double[] Ausgabe = Ergebnisse.Dequeue(); // Entfernen eines Ergebnisses aus der FiFo Queue.
 
+                // Ausgabe des Ergebnisses einer Kalkulation mit allen Zwischenschritten.
                 Console.WriteLine($"{i}\t| Listeneinkaufspreis\t= {Ausgabe[0]} {region.CurrencySymbol}");
                 Console.WriteLine($"\t| Lieferrabatt\t\t↑ -{Ausgabe[1]} {region.CurrencySymbol}");
                 Console.WriteLine($"\t| Zieleinkaufspreis\t= {Ausgabe[2]} {region.CurrencySymbol}");
@@ -67,7 +71,8 @@ namespace Preiskalkulation
         }
 
         static double[] Kalkulation(double _Listeneinkaufspreis) {
-            
+
+            // Definiere alle Variablen für die Kalkulation statisch.
             double _Lieferrabatt        = 0.20;
             double _Liefererskonto      = 0.03;
             double _Bezugskosten        = 5.40;
@@ -80,6 +85,7 @@ namespace Preiskalkulation
             _Vertreterprovision *= 100;
             _Kundenrabatt       *= 100;
 
+            // Die Kalkulation
             double Listeneinkaufspreis             = Math.Round(_Listeneinkaufspreis, 2);
             double Lieferrabatt                    = Math.Round(Listeneinkaufspreis * _Lieferrabatt, 2);
             double Zieleinkaufspreis               = Math.Round(Listeneinkaufspreis - Lieferrabatt, 2);
@@ -102,6 +108,7 @@ namespace Preiskalkulation
             double Kundenrabatt                    = Math.Round(Listenverkaufspreis_Basis * _Kundenrabatt, 2);
             double Listenverkaufspreis             = Math.Round(Zielverkaufspreis + Kundenrabatt, 2);
             
+            // Rückgabe des Ergebnisses.
             return new double[] {Listeneinkaufspreis, Lieferrabatt, Zieleinkaufspreis, Liefererskonto,
                                  Bareinkaufspreis, _Bezugskosten, Bezugspreis, Handlungskosten, Selbstkosten, 
                                  Gewinn, Barverkaufspreis, Kundenskonto, Vertreterprovision, Zielverkaufspreis, 
@@ -112,17 +119,18 @@ namespace Preiskalkulation
             double eingabe_ = 0;
             bool exit_ = false;
 
-            bool input_success = false;
+            bool input_success = false; // Abbruchbedingund der folgenden while-Schleife
             while (!input_success) {
                 Console.Write(frage);
 
                 string console_input = Console.ReadLine();
-                if (console_input == "exit") {
+                if (console_input == "exit") { // Prüfen, ob der User fertig mit seiner Eingabe ist.
                     exit_ = true;
                 }
 
                 console_input = console_input.Replace(',', '.');
-                if (double.TryParse(console_input, NumberStyles.Any, CultureInfo.InvariantCulture, out eingabe_) == false && exit_ == false) {
+                // Check und Parsen der Eingabe des Users
+                if (exit_ == false && double.TryParse(console_input, NumberStyles.Any, CultureInfo.InvariantCulture, out eingabe_) == false) {
                     Console.WriteLine("Ihre Eingabe war fehlerhaft. Bitte probieren sie es nocheinmal.");
                 } else { input_success = true; }
             }

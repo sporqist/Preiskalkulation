@@ -131,7 +131,7 @@ namespace Preiskalkulation
                 console_input = console_input.Replace(',', '.');
                 // Check und Parsen der Eingabe des Users
                 if (exit_ == false && double.TryParse(console_input, NumberStyles.Any, CultureInfo.InvariantCulture, out eingabe_) == false) {
-                    Console.WriteLine("Ihre Eingabe war fehlerhaft. Bitte probieren sie es nocheinmal.");
+                    Console.WriteLine("Ihre Eingabe war fehlerhaft. Bitte probieren sie es noch einmal.");
                 } else { input_success = true; }
             }
             return (eingabe_, exit_);

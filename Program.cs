@@ -2,7 +2,6 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Threading;
 
 namespace Preiskalkulation
 {
@@ -10,9 +9,13 @@ namespace Preiskalkulation
     {
         static void Main(string[] args)
         {
+            // Aktiviere UTF-8 Ausgabe auf dem Terminal, um Sonderzeichen wie Währungssymbole ausgeben zu können.
             Console.OutputEncoding = Encoding.UTF8;
-            var region = new RegionInfo(System.Threading.Thread.CurrentThread.CurrentCulture.LCID);
+            // Speichere die Regionsinformationen des aktuellen Kontexts, um automatisch 
+            // das richtige Währungssymbol anzeigen zu können.
+            RegionInfo region = new RegionInfo(System.Threading.Thread.CurrentThread.CurrentCulture.LCID);
             
+            // Ausgabe der Bedienungsanleitung.
             Console.WriteLine();
             Console.WriteLine("=== Listenpreiskalkulation ===");
             Console.WriteLine();
@@ -20,21 +23,19 @@ namespace Preiskalkulation
             Console.WriteLine("Eingaben mit \"Enter\" bestätigen. Zum Beenden und ausgeben der Ergebnisse \"exit\" eingeben.");
             Console.WriteLine();
 
-            bool Exit;
-            int Iteration = 1;
-            Queue<double[]> Ergebnisse = new Queue<double[]>();
+            bool Exit;                                          // Abbruchbedingung der nächsten while-Schleife
+            Queue<double[]> Ergebnisse = new Queue<double[]>(); 
             
             Console.WriteLine("Eingabe:");
             Console.WriteLine($"Nr.\t| Listeneinkaufspreis ({region.CurrencySymbol})");
             Console.WriteLine("========+==========================================");
             do {
-                (double, bool) _Eingabe = Eingabe($"{Iteration}\t| ");
+                (double, bool) _Eingabe = Eingabe($"{Ergebnisse.Count + 1}\t| ");
                 double Listeneinkaufspreis = _Eingabe.Item1;
                 Exit = _Eingabe.Item2;
 
                 double[] Ergebnis = Kalkulation(Listeneinkaufspreis);
                 Ergebnisse.Enqueue(Ergebnis);
-                Iteration++;
             } while (!Exit);
 
             Console.WriteLine();
@@ -101,17 +102,6 @@ namespace Preiskalkulation
             double Kundenrabatt                    = Math.Round(Listenverkaufspreis_Basis * _Kundenrabatt, 2);
             double Listenverkaufspreis             = Math.Round(Zielverkaufspreis + Kundenrabatt, 2);
             
-            //Console.WriteLine($"Listeneinkaufspreis: {Listeneinkaufspreis}");
-            //Console.WriteLine($"Zieleinkaufspreis:   {Zieleinkaufspreis}");
-            //Console.WriteLine($"Bareinkaufspreis:    {Bareinkaufspreis}");
-            //Console.WriteLine($"Bezugspreis:         {Bezugspreis}");
-            //Console.WriteLine($"Selbstkosten:        {Selbstkosten}");
-            //Console.WriteLine($"Barverkaufspreis:    {Barverkaufspreis}");
-            //Console.WriteLine($"Zielverkaufspreis:   {Zielverkaufspreis}");
-            //
-            //Console.WriteLine();
-
-
             return new double[] {Listeneinkaufspreis, Lieferrabatt, Zieleinkaufspreis, Liefererskonto,
                                  Bareinkaufspreis, _Bezugskosten, Bezugspreis, Handlungskosten, Selbstkosten, 
                                  Gewinn, Barverkaufspreis, Kundenskonto, Vertreterprovision, Zielverkaufspreis, 
